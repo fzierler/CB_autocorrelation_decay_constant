@@ -1,6 +1,7 @@
 using Pkg;Pkg.activate("./src/parse")
 using HiRepParsing
-
+using HiRepOutputCleaner
+using DelimitedFiles
 
 # This script parses the log files in the directory 'dir', and saves them as an hdf5-file 
 # in the location provided by 'h5file'.
@@ -11,8 +12,22 @@ function main(listfile,h5file;setup=true,filter_channels=false,channels=nothing)
     isfile(h5file) && rm(h5file)
     for (file,ensemble) in eachrow(readdlm(listfile,','))
         @show file,ensemble
-        regex = r"TRIPLET"
-        writehdf5_spectrum_with_regexp(file,h5file,regex;mixed_rep=true,h5group=ensemble,setup,filter_channels,channels,sort=true)
+        #regex = r"(DEFAULT SEMWALL TRIPLET|TRIPLET)"
+        #writehdf5_spectrum_with_regexp(file,h5file,regex;mixed_rep=true,h5group=ensemble,setup,filter_channels,channels,sort=true)
+        tmp_filename = "tmp/tmp.txt"
+        clean_hirep_file(file,tmp_filename;checkpoint_pattern="analysed")
+        # only try parsing if the filesize is non-vanishing
+        if filesize(tmp_filename) > 0
+            regex = r"(DEFAULT SEMWALL TRIPLET|TRIPLET)"
+            writehdf5_spectrum_with_regexp(tmp_filename,h5file,regex;mixed_rep=true,h5group=ensemble,setup,filter_channels,channels,sort=true)
+        end
+        rm(tmp_filename)
+
     end
 end
-main("./metadata/ensembles.csv","data_assets/test.hdf5")
+
+listfile = "./metadata/ensembles.csv" 
+h5file   = "data_assets/test.hdf5" 
+
+isfile(h5file) && rm(h5file)
+main(listfile, h5file)
