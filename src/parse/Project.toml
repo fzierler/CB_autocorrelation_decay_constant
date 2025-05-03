@@ -1,0 +1,12 @@
+name = "parse"
+uuid = "8ae965bb-1bbe-4fc8-8ed9-01771ecd84a4"
+authors = ["Fabian Zierler <fabian.zierler@a1.net>"]
+version = "0.1.0"
+
+[deps]
+HiRepOutputCleaner = "a6578ec9-e5ba-419d-b25f-68053db3bc00"
+HiRepParsing = "c7cc7de0-aa5c-4db3-979c-e9fc59cba489"
+
+[compat]
+HiRepOutputCleaner = "0.1.0"
+HiRepParsing = "0.1.0"
