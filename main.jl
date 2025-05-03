@@ -28,6 +28,8 @@ end
 
 listfile = "./metadata/ensembles.csv" 
 h5file   = "data_assets/test.hdf5" 
+channels = ["g5, g1, g2, g3", "g5_g0g5_re"]
+filter_channels = true
 
 isfile(h5file) && rm(h5file)
-main(listfile, h5file)
+main(listfile, h5file; filter_channels, channels)
