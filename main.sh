@@ -1,1 +1,1 @@
-python3 src_py/mass_wall.py 
+python3 src_py/mass_wall.py --ensemble_name M1FUN --plateau_start 10 --plateau_end 15  --output_file_mean data_assets/test.csv --channel ps data_assets/test.hdf5

@@ -31,21 +31,3 @@ def get_ensemble(
         raise ValueError("No ensembles found.")
     else:
         return candidate_ensembles
-
-
-def filter_configurations(
-    ensemble, min_trajectory=None, max_trajectory=None, trajectory_step=1
-):
-    indices = np.asarray(
-        [
-            int(re.match(".*n([0-9]+)$", filename.decode()).groups()[0])
-            for filename in ensemble["configurations"]
-        ]
-    )
-    filtered_indices = (
-        ((indices >= min_trajectory) if min_trajectory is not None else True)
-        & ((indices <= max_trajectory) if max_trajectory is not None else True)
-        & ((indices - (min_trajectory or 0)) % trajectory_step == 0)
-    )
-
-    return filtered_indices

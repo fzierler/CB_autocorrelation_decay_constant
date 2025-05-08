@@ -4,8 +4,6 @@ from argparse import ArgumentParser, FileType
 import numpy as np
 
 from bootstrap import get_rng, sample_bootstrap_1d
-from read_hdf5 import filter_configurations
-
 
 def get_args():
     parser = ArgumentParser(
@@ -27,24 +25,6 @@ def get_args():
         "--plateau_end", type=int, default=None, help="Time slice at which plateau ends"
     )
     parser.add_argument(
-        "--min_trajectory",
-        type=int,
-        default=None,
-        help="Lowest trajectory index to consider",
-    )
-    parser.add_argument(
-        "--max_trajectory",
-        type=int,
-        default=None,
-        help="Highest trajectory index to consider",
-    )
-    parser.add_argument(
-        "--trajectory_step",
-        type=int,
-        default=1,
-        help="Interval of trajectories to consider",
-    )
-    parser.add_argument(
         "--output_file_mean",
         type=FileType("w"),
         default="-",
@@ -62,15 +42,8 @@ def get_args():
 def get_correlator_samples(
     ensemble,
     measurement,
-    min_trajectory=None,
-    max_trajectory=None,
-    trajectory_step=1,
 ):
-    filtered_indices = filter_configurations(
-        ensemble, min_trajectory, max_trajectory, trajectory_step
-    )
-
-    C = ensemble[measurement][:, filtered_indices]
+    C = ensemble[measurement][:, :]
 
     return sample_bootstrap_1d(C.T, get_rng(ensemble.name))
 
