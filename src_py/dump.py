@@ -5,9 +5,7 @@ import json
 import numpy as np
 import pandas as pd
 from uncertainties import ufloat, UFloat
-
-from .bootstrap import BootstrapSampleSet
-
+from bootstrap import BootstrapSampleSet
 
 def dump_dict(data, filename):
     to_write = {}

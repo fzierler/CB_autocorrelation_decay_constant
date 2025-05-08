@@ -1,8 +1,8 @@
-from . import fitting
 import numpy as np
 from scipy import linalg
-from .bootstrap import BootstrapSampleSet
 
+from bootstrap import BootstrapSampleSet
+import fitting
 
 def extract_meson_mass(C_tmp, plateau_start, plateau_end):
     E_fit, A_fit, chisquare = fitting.fit_cosh_bootstrap(

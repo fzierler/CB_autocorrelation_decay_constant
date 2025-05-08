@@ -7,7 +7,7 @@ import numpy as np
 from scipy.optimize import curve_fit, minimize
 import warnings
 
-from .bootstrap import BootstrapSampleSet
+from bootstrap import BootstrapSampleSet
 
 warnings.filterwarnings("ignore")
 

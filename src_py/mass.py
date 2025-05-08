@@ -3,8 +3,8 @@
 from argparse import ArgumentParser, FileType
 import numpy as np
 
-from .bootstrap import get_rng, sample_bootstrap_1d
-from .read_hdf5 import filter_configurations
+from bootstrap import get_rng, sample_bootstrap_1d
+from read_hdf5 import filter_configurations
 
 
 def get_args():
@@ -15,31 +15,7 @@ def get_args():
     parser.add_argument(
         "--ensemble_name",
         default=None,
-        help="Name of the ensemble to analyse. Only used for tagging output.",
-    )
-    parser.add_argument(
-        "--beta",
-        type=float,
-        default=None,
-        help="The beta value of the ensemble to analyse",
-    )
-    parser.add_argument(
-        "--mAS",
-        type=float,
-        default=None,
-        help="The antisymmetric fermion mass of the ensemble to analyse",
-    )
-    parser.add_argument(
-        "--Nt",
-        type=int,
-        default=None,
-        help="The temporal extent of the ensemble to analyse",
-    )
-    parser.add_argument(
-        "--Ns",
-        type=int,
-        default=None,
-        help="The spatial extent of the ensemble to analyse",
+        help="Name of the ensemble to analyse.",
     )
     parser.add_argument(
         "--plateau_start",
@@ -75,44 +51,12 @@ def get_args():
         help="Where to output the mean and uncertainty of meson mass. (Defaults to stdout.)",
     )
     parser.add_argument(
-        "--output_file_samples",
-        type=FileType("w"),
-        default=None,
-        help="Where to output the bootstrap samples for meson mass",
-    )
-    parser.add_argument(
         "--channel",
         choices=["ps", "v", "t", "av", "at", "s"],
         default=None,
         help="Measuring channel",
     )
-    parser.add_argument(
-        "--epsilon",
-        type=float,
-        default=None,
-        help="Wuppertal smearing epsilon",
-    )
-    parser.add_argument(
-        "--N_sink",
-        type=int,
-        default=None,
-        help="Optimal smearing level",
-    )
-    parser.add_argument(
-        "--num_source",
-        type=int,
-        default=None,
-        help="number of source location used for smearing measurements",
-    )
     return parser.parse_args()
-
-
-def renormalisation_constant(ch):
-    return {
-        "v": -20.57,
-        "av": -15.82,
-        "ps": -15.82,
-    }.get(ch, ch)
 
 
 def get_correlator_samples(

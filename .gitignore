@@ -4,3 +4,5 @@ data_assets/
 assets/
 metadata/
 tmp/
+
+*__pycache__

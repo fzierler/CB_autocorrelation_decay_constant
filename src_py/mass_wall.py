@@ -2,17 +2,16 @@
 import h5py
 import numpy as np
 
-
-from .bootstrap import BootstrapSampleSet, bootstrap_finalize
-from .dump import dump_dict, dump_samples
-from . import extract
-from .mass import (
+from bootstrap import get_rng, sample_bootstrap_1d
+from dump import dump_dict, dump_samples
+import extract
+from mass import (
     get_correlator_samples,
     get_channel_tags,
     fold_correlators,
     get_args,
 )
-from .read_hdf5 import get_ensemble
+from read_hdf5 import get_ensemble
 
 
 def ps_extraction(ensemble, args):
@@ -116,17 +115,17 @@ def main():
         },
         args.output_file_mean,
     )
-    if args.output_file_samples:
-        dump_samples(
-            {
-                **metadata,
-                f"{args.channel}_mass_samples": mass.samples,
-                f"{args.channel}_mass_value": mass.mean,
-                f"{args.channel}_matrix_element_samples": matrix_element.samples,
-                f"{args.channel}_matrix_element_value": matrix_element.mean,
-            },
-            args.output_file_samples,
-        )
+    #if args.output_file_samples:
+    #    dump_samples(
+    #        {
+    #            **metadata,
+    #            f"{args.channel}_mass_samples": mass.samples,
+    #            f"{args.channel}_mass_value": mass.mean,
+    #            f"{args.channel}_matrix_element_samples": matrix_element.samples,
+    #            f"{args.channel}_matrix_element_value": matrix_element.mean,
+    #        },
+    #        args.output_file_samples,
+    #    )
 
 
 if __name__ == "__main__":
