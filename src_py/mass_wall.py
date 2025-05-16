@@ -49,6 +49,7 @@ def ps_extraction(ensemble, args):
 
 def ch_extraction(ensemble, args):
     target_channels = get_channel_tags(args.channel)
+    Nt, Ns = ensemble["lattice"][0], ensemble["lattice"][1]
 
     bin_samples = []
     bin_mean = []
@@ -56,15 +57,12 @@ def ch_extraction(ensemble, args):
         tmp_set = get_correlator_samples(
             ensemble,
             f"TRIPLET/{target_channels[j]}",
-            args.min_trajectory,
-            args.max_trajectory,
-            args.trajectory_step,
         )
 
-        bin_samples.append(tmp_set.samples * args.Ns**3)
-        bin_mean.append(tmp_set.mean * args.Ns**3)
+        bin_samples.append(tmp_set.samples * Ns**3)
+        bin_mean.append(tmp_set.mean * Ns**3)
 
-    mean = np.zeros(shape=(1, args.Nt))
+    mean = np.zeros(shape=(1, Nt))
     mean[0] = np.array(bin_mean).mean(axis=0)
     mean = fold_correlators(mean)
     samples = fold_correlators(np.array(bin_samples).mean(axis=0))
@@ -95,24 +93,12 @@ def main():
 
     dump_dict(
         {
-            #**metadata,
             f"{args.channel}_chisquare": chi2,
             f"{args.channel}_mass": fitted_m,
             f"{args.channel}_matrix_element": fitted_a,
         },
         args.output_file_mean,
     )
-    #if args.output_file_samples:
-    #    dump_samples(
-    #        {
-    #            **metadata,
-    #            f"{args.channel}_mass_samples": mass.samples,
-    #            f"{args.channel}_mass_value": mass.mean,
-    #            f"{args.channel}_matrix_element_samples": matrix_element.samples,
-    #            f"{args.channel}_matrix_element_value": matrix_element.mean,
-    #        },
-    #        args.output_file_samples,
-    #    )
 
 
 if __name__ == "__main__":
