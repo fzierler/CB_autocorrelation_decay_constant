@@ -61,11 +61,3 @@ def get_channel_tags(ch):
 
 def fold_correlators(C):
     return (C + np.roll(np.flip(C, axis=1), 1, axis=1)) / 2
-
-
-def fold_correlators_cross(C):
-    C_fold = (C - np.roll(np.flip(C, axis=1), 1, axis=1)) / 2
-
-    C_fold[:, 0] = C[:, 0]
-
-    return C_fold
