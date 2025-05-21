@@ -1,6 +1,7 @@
 # Input and output data
 raw_data/
 data_assets/
+external_data/
 assets/
 metadata/
 tmp/
