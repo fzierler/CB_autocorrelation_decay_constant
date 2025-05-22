@@ -3,6 +3,7 @@ using JSON
 using Plots
 using HDF5
 using Statistics
+using LaTeXStrings
 gr(fontfamily="Computer Modern",legend=:topright,frame=:box,titlefontsize=11,legendfontsize=9,labelfontsize=12,left_margin=0Plots.mm)
 
 path      = "./external_data/smeared/" 
@@ -48,4 +49,10 @@ for i in 1:5
     scatter!(plt,[i],[fV],  yerr=[ΔfV],  label="", alpha=0.8, shape=:hexagon,   color=:pink)
     scatter!(plt,[i],[fv],  yerr=[Δfv],  label="", alpha=0.8, shape=:utriangle, color=:orange)
 end
-plt
+# add legend
+xl, yl = xlims(plt), ylims(plt)
+scatter!(plt,[0],[0],label=L"$af_{\rm PS}$ (smeared)", alpha=0.8, shape=:rect,      color=:green)
+scatter!(plt,[0],[0],label=L"$af_{\rm ps}$ (smeared)", alpha=0.8, shape=:circ,      color=:blue)
+scatter!(plt,[0],[0],label=L"$af_{\rm V}$ (smeared)" , alpha=0.8, shape=:hexagon,   color=:pink)
+scatter!(plt,[0],[0],label=L"$af_{\rm v}$ (smeared)" , alpha=0.8, shape=:utriangle, color=:orange)
+plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
