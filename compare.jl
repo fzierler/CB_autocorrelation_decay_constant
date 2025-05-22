@@ -81,5 +81,36 @@ function main()
     plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
     return plt
 end
+function table()
+    file   = "data_assets/comparison_table.csv"
+    header = "ens,ZA_FUN,ZA_AS,ZV_FUN,ZV_AS,fPS_s,ΔfPS_s,fps_s,Δfps_s,fV_s,ΔfV_s,fv_s,Δfv_s,fPS_l,ΔfPS_l,fps_l,Δfps_l,fV_l,ΔfV_l,fv_l,Δfv_l"
+    io     = open(file,"w+")
+    write(io,header*"\n")
+    h5file = "data_assets/test.hdf5" 
+    fid    = h5open(h5file)
+    P      = [ mean(fid["M$(i)FUN"]["plaquette"][]) for i in 1:5 ]
+    beta   = 6.5
+    Z(C, β, ΔΣ, Δ, P) = 1 + C * (ΔΣ + Δ) * (8/β) /(16π^2*P)
+    ZA(C,β,P) = Z(C, β, -12.82, -3, P)
+    ZV(C,β,P) = Z(C, β, -12.82, -7.75, P)
+    for i in [1,4]
+        ens = "M$i"
+        ZA_FUN = ZA(5/4,beta,P[i])
+        ZA_AS  = ZA(2  ,beta,P[i])
+        ZV_FUN = ZV(5/4,beta,P[i])
+        ZV_AS  = ZV(2  ,beta,P[i])
+        fPS_s, ΔfPS_s = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"f" ,"ps")[1:2]
+        fps_s, Δfps_s = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"as","ps")[1:2]
+        fV_s,  ΔfV_s  = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"f" ,"v" )[1:2]
+        fv_s,  Δfv_s  = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"as","v" )[1:2]
+        fPS_l, ΔfPS_l = readdlm("data_assets/M$(i)FUN_ps.csv",',',skipstart=1)[4:5]
+        fps_l, Δfps_l = readdlm("data_assets/M$(i)AS_ps.csv",',',skipstart=1)[4:5]
+        fV_l,  ΔfV_l  = readdlm("data_assets/M$(i)FUN_v.csv",',',skipstart=1)[4:5]
+        fv_l,  Δfv_l  = readdlm("data_assets/M$(i)AS_v.csv",',',skipstart=1)[4:5]
+        writedlm(io,[ens ZA_FUN ZA_AS ZV_FUN ZV_AS fPS_s ΔfPS_s fps_s Δfps_s fV_s ΔfV_s fv_s Δfv_s fPS_l ΔfPS_l fps_l Δfps_l fV_l  ΔfV_l fv_l  Δfv_l],',')
+    end
+    close(io)
+end
 
 plt = main()
+table()
