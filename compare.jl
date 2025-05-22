@@ -4,6 +4,7 @@ using Plots
 using HDF5
 using Statistics
 using LaTeXStrings
+using DelimitedFiles
 gr(fontfamily="Computer Modern",legend=:topright,frame=:box,titlefontsize=11,legendfontsize=9,labelfontsize=12,left_margin=0Plots.mm)
 
 path      = "./external_data/smeared/" 
@@ -53,6 +54,24 @@ end
 xl, yl = xlims(plt), ylims(plt)
 scatter!(plt,[0],[0],label=L"$af_{\rm PS}$ (smeared)", alpha=0.8, shape=:rect,      color=:green)
 scatter!(plt,[0],[0],label=L"$af_{\rm ps}$ (smeared)", alpha=0.8, shape=:circ,      color=:blue)
-scatter!(plt,[0],[0],label=L"$af_{\rm V}$ (smeared)" , alpha=0.8, shape=:hexagon,   color=:pink)
-scatter!(plt,[0],[0],label=L"$af_{\rm v}$ (smeared)" , alpha=0.8, shape=:utriangle, color=:orange)
+scatter!(plt,[0],[0],label=L"$af_{\rm V}$  (smeared)" , alpha=0.8, shape=:hexagon,   color=:pink)
+scatter!(plt,[0],[0],label=L"$af_{\rm v}$  (smeared)" , alpha=0.8, shape=:utriangle, color=:orange)
+plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
+
+for i in [1,4]
+    fPS, ΔfPS = readdlm("data_assets/M$(i)FUN_ps.csv",',',skipstart=1)[4:5]
+    fps, Δfps = readdlm("data_assets/M$(i)AS_ps.csv",',',skipstart=1)[4:5]
+    fV,  ΔfV  = readdlm("data_assets/M$(i)FUN_v.csv",',',skipstart=1)[4:5]
+    fv,  Δfv  = readdlm("data_assets/M$(i)AS_v.csv",',',skipstart=1)[4:5]
+    scatter!(plt,[i],[fPS], yerr=[ΔfPS], label="", alpha=0.4, shape=:rect,      color=:green)
+    scatter!(plt,[i],[fps], yerr=[Δfps], label="", alpha=0.4, shape=:circ,      color=:blue)
+    scatter!(plt,[i],[fV],  yerr=[ΔfV],  label="", alpha=0.4, shape=:hexagon,   color=:pink)
+    scatter!(plt,[i],[fv],  yerr=[Δfv],  label="", alpha=0.4, shape=:utriangle, color=:orange)
+end
+# add legend
+xl, yl = xlims(plt), ylims(plt)
+scatter!(plt,[0],[0],label=L"$af_{\rm PS}$ (wall)", alpha=0.4, shape=:rect,      color=:green)
+scatter!(plt,[0],[0],label=L"$af_{\rm ps}$ (wall)", alpha=0.4, shape=:circ,      color=:blue)
+scatter!(plt,[0],[0],label=L"$af_{\rm V}$  (wall)", alpha=0.4, shape=:hexagon,   color=:pink)
+scatter!(plt,[0],[0],label=L"$af_{\rm v}$  (wall)", alpha=0.4, shape=:utriangle, color=:orange)
 plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
