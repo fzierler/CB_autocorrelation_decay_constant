@@ -5,6 +5,7 @@ using HDF5
 using Statistics
 using LaTeXStrings
 using DelimitedFiles
+using LatticeUtils
 gr(fontfamily="Computer Modern",legend=:topright,frame=:box,titlefontsize=11,legendfontsize=9,labelfontsize=12,left_margin=0Plots.mm)
 
 path      = "./external_data/smeared/" 
@@ -81,8 +82,7 @@ function main()
     plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
     return plt
 end
-function table()
-    file   = "data_assets/comparison_table.csv"
+function table(file)
     header = "ens,ZA_FUN,ZA_AS,ZV_FUN,ZV_AS,fPS_s,ΔfPS_s,fps_s,Δfps_s,fV_s,ΔfV_s,fv_s,Δfv_s,fPS_l,ΔfPS_l,fps_l,Δfps_l,fV_l,ΔfV_l,fv_l,Δfv_l"
     io     = open(file,"w+")
     write(io,header*"\n")
@@ -111,6 +111,28 @@ function table()
     end
     close(io)
 end
+function tex_table(file,outfile)
+    io = open(outfile,"w+")
+    for row in eachrow(readdlm(file,',',skipstart=1))
+        ZA_FUN, ZA_AS, ZV_FUN, ZV_AS = row[2:5] 
+        ens  = row[1]
+        PS_s = errorstring(ZA_FUN*row[6],ZA_FUN*row[7]  ; nsig=1)
+        ps_s = errorstring(ZA_AS *row[8],ZA_AS *row[9]  ; nsig=1)
+        V_s  = errorstring(ZV_FUN*row[10],ZV_FUN*row[11]; nsig=1)
+        v_s  = errorstring(ZV_AS *row[12],ZV_AS *row[13]; nsig=1)
+        PS_l = errorstring(ZA_FUN*row[14],ZA_FUN*row[15]  ; nsig=1)
+        ps_l = errorstring(ZA_AS *row[16],ZA_AS *row[17]  ; nsig=1)
+        V_l  = errorstring(ZV_FUN*row[18],ZV_FUN*row[19]; nsig=1)
+        v_l  = errorstring(ZV_AS *row[20],ZV_AS *row[21]; nsig=1)
+        println(io,"$ens & $PS_l & $PS_s & $ps_l & $ps_s & $V_l & $V_s & $v_l & $v_s \\\\") 
+    end
+    close(io)
+end
+
 
 plt = main()
-table()
+savefig(plt,"assets/decay_constant_comparison.pdf")
+file     = "data_assets/comparison_table.csv"
+file_tex = "assets/comparison_table.tex"
+table(file)
+tex_table(file, file_tex)
