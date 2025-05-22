@@ -38,7 +38,11 @@ function main()
     ZV_FUN = ZV.(5/4,beta,P)
     ZV_AS  = ZV.(2  ,beta,P)
 
-    plt = plot(xticks=(1:5,["M$i" for i in 1:5]))
+    xticks = (1:5,["M$i" for i in 1:5])
+    title  =  "Renormalized decay constants: smeared and local operators"
+    xlabel =  "ensemble"
+    ylabel = L"renormalized decay constants $[a]$"
+    plt  = plot(;xticks, title, xlabel, ylabel)
     for i in 1:5
         ens = "M$i"
         fPS, ΔfPS = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"f" ,"ps")[1:2]
@@ -70,10 +74,10 @@ function main()
     end
     # add legend
     xl, yl = xlims(plt), ylims(plt)
-    scatter!(plt,[0],[0],label=L"$af_{\rm PS}$ (wall)", alpha=0.4, shape=:rect,      color=:green)
-    scatter!(plt,[0],[0],label=L"$af_{\rm ps}$ (wall)", alpha=0.4, shape=:circ,      color=:blue)
-    scatter!(plt,[0],[0],label=L"$af_{\rm V}$  (wall)", alpha=0.4, shape=:hexagon,   color=:pink)
-    scatter!(plt,[0],[0],label=L"$af_{\rm v}$  (wall)", alpha=0.4, shape=:utriangle, color=:orange)
+    scatter!(plt,[0],[0],label=L"$af_{\rm PS}$ (local)", alpha=0.4, shape=:rect,      color=:green)
+    scatter!(plt,[0],[0],label=L"$af_{\rm ps}$ (local)", alpha=0.4, shape=:circ,      color=:blue)
+    scatter!(plt,[0],[0],label=L"$af_{\rm V}$  (local)", alpha=0.4, shape=:hexagon,   color=:pink)
+    scatter!(plt,[0],[0],label=L"$af_{\rm v}$  (local)", alpha=0.4, shape=:utriangle, color=:orange)
     plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
     return plt
 end
