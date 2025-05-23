@@ -130,7 +130,10 @@ function tex_table(file,outfile)
 end
 
 plt = main()
-savefig(plt,"assets/wall_comparison.pdf")
+plot_file = "assets/wall_comparison.pdf"
+savefig(plt,plot_file)
+ispath(basename(plot_file)) || mkpath(basename(plot_file))
+
 file     = "data_assets/comparison_table.csv"
 file_tex = "assets/comparison_table.tex"
 table(file)
