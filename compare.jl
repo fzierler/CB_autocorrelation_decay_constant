@@ -70,14 +70,14 @@ function main()
         fv,  Δfv  = readdlm("data_assets/M$(i)AS_v.csv",',',skipstart=1)[4:5]
         scatter!(plt,[i],[ZA_FUN[i]*fPS],yerr=[ZA_FUN[i]*ΔfPS],label="", alpha=0.4, shape=:rect,      color=:green)
         scatter!(plt,[i],[ZA_AS[i]*fps], yerr=[ZA_AS[i]*Δfps], label="", alpha=0.4, shape=:circ,      color=:blue)
-        scatter!(plt,[i],[ZV_FUN[i]*fV], yerr=[ZV_FUN[i]*ΔfV], label="", alpha=0.4, shape=:hexagon,   color=:pink)
+        scatter!(plt,[i],[ZV_FUN[i]*fV], yerr=[ZV_FUN[i]*ΔfV], label="", alpha=0.4, shape=:pentagon,  color=:pink)
         scatter!(plt,[i],[ZV_AS[i]*fv],  yerr=[ZV_AS[i]*Δfv],  label="", alpha=0.4, shape=:utriangle, color=:orange)
     end
     # add legend
     xl, yl = xlims(plt), ylims(plt)
     scatter!(plt,[0],[0],label=L"$af_{\rm PS}$ (local)", alpha=0.4, shape=:rect,      color=:green)
     scatter!(plt,[0],[0],label=L"$af_{\rm ps}$ (local)", alpha=0.4, shape=:circ,      color=:blue)
-    scatter!(plt,[0],[0],label=L"$af_{\rm V}$  (local)", alpha=0.4, shape=:hexagon,   color=:pink)
+    scatter!(plt,[0],[0],label=L"$af_{\rm V}$  (local)", alpha=0.4, shape=:pentagon,  color=:pink)
     scatter!(plt,[0],[0],label=L"$af_{\rm v}$  (local)", alpha=0.4, shape=:utriangle, color=:orange)
     plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
     return plt
