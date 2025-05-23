@@ -1,4 +1,5 @@
 using Pkg;Pkg.activate("./src/parse")
+Pkg.instantiate()
 using HiRepParsing
 using DelimitedFiles
 
