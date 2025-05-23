@@ -131,7 +131,7 @@ end
 
 plt = main()
 plot_file = "assets/wall_comparison.pdf"
-ispath(basename(plot_file)) || mkpath(basename(plot_file))
+ispath("assets") || mkpath("assets")
 savefig(plt,plot_file)
 
 file     = "data_assets/comparison_table.csv"
