@@ -63,7 +63,7 @@ function write_tau_csv_no_correlators(h5file,csv_io)
     f    = h5open(h5file)
     ens  = keys(f)
     pad0 = maximum(length.(ens))+2
-    println(csv_io,"$(rpad("name",pad0)) $(rpad("τ_P,",pad1)) $(rpad("τ_exp_P,",pad2)) $(rpad("τ_Q,",pad1)) $(rpad("τ_exp_Q,",pad2)) $(rpad("τ_E,",pad1)) $(rpad("τ_exp_E,",pad2))")
+    println(csv_io,"$(rpad("name,",pad0)) $(rpad("τ_P,",pad1)) $(rpad("τ_exp_P,",pad2)) $(rpad("τ_Q,",pad1)) $(rpad("τ_exp_Q,",pad2)) $(rpad("τ_E,",pad1)) $(rpad("τ_exp_E,",pad2))")
     for e in ens    
         τQ, ΔτQ, τexpQ = read(f[e]["topology"],"tau_int"),       read(f[e]["topology"],"Delta_tau_int"),      read(f[e]["topology"],"tau_exp")
         τE, ΔτE, τexpE = read(f[e]["energy_density"],"tau_int"), read(f[e]["energy_density"],"Delta_tau_int"),read(f[e]["energy_density"],"tau_exp")
