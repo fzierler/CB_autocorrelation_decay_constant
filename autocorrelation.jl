@@ -16,7 +16,6 @@ function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdi
 
     f = h5open(file)
     for ens in keys(f)
-        @show ens
         obs  = read(f[ens],name)
         if !isnothing(index)
             obs = obs[index...]
@@ -26,11 +25,10 @@ function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdi
         plt1,τ, Δτ,τexp = MadrasSokal.publication_plot(cfgn,obs,plot_label,therm)
         plt2 = autocorrelation_overview(cfgn,obs,plot_label,therm;with_exponential=true)
  
-        T, L, β, mf, mas = try 
-            parse_filename(ens)
-        catch 
-            parse_configname(ens) 
-        end
+        β    = read(f[ens],"beta")
+        T, L = read(f[ens],"lattice")[1:2]
+        mas  = read(f[ens],"quarkmassesmas")[1]
+        mf   = read(f[ens],"quarkmassesmf")[1]
         title = latexstring(L"\beta\!=\!%$(β),~ T\!\times\!L^3\!=\!\!%$(T)\!\times\!%$(L)^3,-\!(am_0^{\rm f},am_0^{\rm as})\!=\!(%$(abs(mf)),%$(abs(mas)))")
         
         ens_std = "Lt$(T)Ls$(L)beta$(round(β,sigdigits=3))mf$(mf)mas$(mas)"
@@ -82,11 +80,12 @@ out_csv = "data_assets/autocor.csv"
 pltdir  = "data_assets/autocorrelation_plots"
 
 isfile(outfile) && rm(outfile)
-full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, name="Q",                     plot_label="Q",                 therm = 1)
-full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, name="energy_density_w0_sym", plot_label=L"\mathcal{E}(w_0)", therm = 1)
-full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, name="plaquette",             plot_label=L"<\!p\!>",          therm = 1)
-full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, name="source_N0_sink_N80/anti TRIPLET g5", index=(:,10), plot_label=L"C_\pi(t=10)", therm = 1)
+full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, name="Q",                       plot_label="Q",                 therm = 1)
+full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
+full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
+#full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)", therm = 1)
 
 io = open(out_csv,"w")
-write_tau_csv(outfile,io)
+#write_tau_csv(outfile,io)
+write_tau_csv_no_correlators(outfile,io)
 close(io)
