@@ -1,5 +1,4 @@
 using Pkg; Pkg.activate("./libs/MadrasSokal")
-Pkg.instantiate()
 using MadrasSokal
 using Plots
 using LaTeXStrings

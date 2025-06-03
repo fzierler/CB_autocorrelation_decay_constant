@@ -1,3 +1,5 @@
+# download and install all julia dependencies required for the analysis 
+julia src_jl/instantiate.jl
 # parse wall source logfiles and save to hdf5
 julia src_jl/parse.jl
 # parse and analyse wilson flow/topology measurements 
