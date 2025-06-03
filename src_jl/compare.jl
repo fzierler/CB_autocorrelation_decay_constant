@@ -138,4 +138,3 @@ file     = "data_assets/comparison_table.csv"
 file_tex = "assets/comparison_table.tex"
 table(file)
 tex_table(file, file_tex)
-display(plt)
