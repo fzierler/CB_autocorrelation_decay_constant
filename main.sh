@@ -1,7 +1,5 @@
 # parse logfiles and save to hdf5
 julia parse.jl
-# create plots of the effective mass for further reference
-julia effective_mass.jl
 # perform individual fits for every ensemble and channel
 python3 src_py/mass_wall.py --ensemble_name M1FUN --plateau_start 16 --plateau_end 24  --output_file_mean data_assets/M1FUN_ps.csv --channel ps data_assets/test.hdf5
 python3 src_py/mass_wall.py --ensemble_name M1FUN --plateau_start 16 --plateau_end 24  --output_file_mean data_assets/M1FUN_v.csv --channel v  data_assets/test.hdf5
