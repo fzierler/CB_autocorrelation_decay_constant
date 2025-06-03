@@ -1,5 +1,3 @@
-name = "parse"
-uuid = "8ae965bb-1bbe-4fc8-8ed9-01771ecd84a4"
 authors = ["Fabian Zierler <fabian.zierler@a1.net>"]
 version = "0.1.0"
 

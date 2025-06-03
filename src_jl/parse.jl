@@ -1,4 +1,4 @@
-using Pkg;Pkg.activate("./src/parse")
+using Pkg;Pkg.activate("./src_jl")
 Pkg.instantiate()
 using HiRepParsing
 using DelimitedFiles
