@@ -1,4 +1,4 @@
-using Pkg; Pkg.activate("./libs/MadrasSokal")
+using Pkg;Pkg.activate("./src_jl")
 using MadrasSokal
 using Plots
 using LaTeXStrings
