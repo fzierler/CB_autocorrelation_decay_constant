@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 import re
 
 from flow_analysis.readers import read_flows_hirep
+from flow_analysis.measurements.scales import measure_w0
 import h5py
 import numpy as np
 
@@ -26,6 +27,13 @@ def get_args():
         "--h5_filename",
         required=True,
         help="Where to place the combined HDF5 file.",
+    )
+    parser.add_argument(
+        "--W0",
+        required=False,
+        type=float,
+        default=0.2815,
+        help="Wilson flow reference scale.",
     )
     return parser.parse_args()
 
@@ -63,7 +71,7 @@ def get_filename_metadata(metadata, content):
             metadata[key] = value
 
 
-def process_file(flow_filename, h5file):
+def process_file(flow_filename, h5file,W0):
     flows = read_flows_hirep(flow_filename, metadata_callback=get_filename_metadata)
     group_name = "gflow_{NT}x{NX}x{NY}x{NZ}b{beta}mf{mf}mas{mas}".format(**flows.metadata)
     group = h5file.create_group(group_name)
@@ -86,12 +94,28 @@ def process_file(flow_filename, h5file):
     group.create_dataset("energy density plaq", data=flows.Eps)
     group.create_dataset("energy density sym", data=flows.Ecs)
 
+    # add additional quantities for compatibility
+    Qs = flows.Q_history()
+    trajectories = flows.trajectories
+    w0_sym = measure_w0(flows, W0, operator="sym")
+    w0_plaq = measure_w0(flows, W0, operator="plaq")
+
+    # (I follow the analysis release of )
+    flow_time_index_sym  = abs(flows.times - w0_sym**2).argmin()
+    flow_time_index_plaq = abs(flows.times - w0_plaq**2).argmin()
+    energy_density_w0_sym = flows.Ecs[:,flow_time_index_sym]
+    energy_density_w0_plaq = flows.Eps[:,flow_time_index_plaq]
+    group.create_dataset("trajectories", data=trajectories)
+    group.create_dataset("Q", data=Qs)
+    group.create_dataset("energy_density_w0_sym",  data=energy_density_w0_sym)
+    group.create_dataset("energy_density_w0_plaq", data=energy_density_w0_plaq)
+
 
 def main():
     args = get_args()
     with h5py.File(args.h5_filename, "w-") as h5file:
         for flow_filename in args.flow_filenames:
-            process_file(flow_filename, h5file)
+            process_file(flow_filename, h5file, args.W0)
 
 if __name__ == "__main__":
     main()
