@@ -1,5 +1,7 @@
-# parse logfiles and save to hdf5
+# parse wall source logfiles and save to hdf5
 julia parse.jl
+# parse and analyse wilson flow/topology measurements 
+python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5  $(find ./raw_data/ -name out_flow | xargs)
 # perform individual fits for every ensemble and channel
 python3 src_py/mass_wall.py --ensemble_name M1FUN --plateau_start 16 --plateau_end 24  --output_file_mean data_assets/M1FUN_ps.csv --channel ps data_assets/wall_correlators.hdf5
 python3 src_py/mass_wall.py --ensemble_name M1FUN --plateau_start 16 --plateau_end 24  --output_file_mean data_assets/M1FUN_v.csv --channel v  data_assets/wall_correlators.hdf5

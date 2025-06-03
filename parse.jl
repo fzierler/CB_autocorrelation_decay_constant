@@ -7,6 +7,7 @@ using DelimitedFiles
 # are written in distinct hdf5 groups labelled  by the variable `ensemble`
 function main(listfile,h5file;setup=true,filter_channels=false,channels=nothing)
     isfile(h5file) && rm(h5file)
+    println("Parsing wall source correlator data")
     for (file,ensemble) in eachrow(readdlm(listfile,','))
         @show (file,ensemble)
         writehdf5_spectrum(file,h5file,"TRIPLET";mixed_rep=true,h5group=ensemble,setup,filter_channels,channels,sort=true,re_im=false)
