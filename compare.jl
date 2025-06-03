@@ -27,7 +27,7 @@ function mass_and_decay_constant_unrenormalized(path,ens,rep,channel)
     return f, Δf, m, Δm
 end
 function main()
-    h5file = "data_assets/test.hdf5" 
+    h5file = "data_assets/wall_correlators.hdf5" 
     fid    = h5open(h5file)
     P      = [ mean(fid["M$(i)FUN"]["plaquette"][]) for i in 1:5 ]
     beta   = 6.5
@@ -86,7 +86,7 @@ function table(file)
     header = "ens,ZA_FUN,ZA_AS,ZV_FUN,ZV_AS,fPS_s,ΔfPS_s,fps_s,Δfps_s,fV_s,ΔfV_s,fv_s,Δfv_s,fPS_l,ΔfPS_l,fps_l,Δfps_l,fV_l,ΔfV_l,fv_l,Δfv_l"
     io     = open(file,"w+")
     write(io,header*"\n")
-    h5file = "data_assets/test.hdf5" 
+    h5file = "data_assets/wall_correlators.hdf5" 
     fid    = h5open(h5file)
     P      = [ mean(fid["M$(i)FUN"]["plaquette"][]) for i in 1:5 ]
     beta   = 6.5
