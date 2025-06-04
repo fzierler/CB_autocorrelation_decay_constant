@@ -14,7 +14,7 @@ conda env create --name wall_decay_constant --file=environment.yml
 conda activate wall_decay_constant
 ```
 
-The julia programming language is not available in conda-forge. If it is not installed on your system, you can install it with the `juliaup` utility included in the provided conda environment using
+The julia programming language is not available in conda-forge on MacOS and is not included by default here. If it is not installed on your system, you can install it with the `juliaup` utility included in the provided conda environment using
 
 ```
 export JULIA_DEPOT_PATH=$CONDA_PREFIX/.julia
