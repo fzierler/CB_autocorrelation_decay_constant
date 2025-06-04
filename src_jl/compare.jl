@@ -26,7 +26,7 @@ function mass_and_decay_constant_unrenormalized(path,ens,rep,channel)
     Δm   = std(data["$(rep)_$(channel)_mass_samples"])
     return f, Δf, m, Δm
 end
-function main()
+function plot_decay()
     h5file = "data_assets/wall_correlators.hdf5" 
     fid    = h5open(h5file)
     P      = [ mean(fid["M$(i)/FUN"]["plaquette"][]) for i in 1:5 ]
@@ -140,13 +140,15 @@ function tex_table(file,outfile)
     write(io,footer)
     close(io)
 end
+function main()
+    plt = plot_decay()
+    plot_file = "assets/wall_comparison.pdf"
+    ispath("assets") || mkpath("assets")
+    savefig(plt,plot_file)
 
-plt = main()
-plot_file = "assets/wall_comparison.pdf"
-ispath("assets") || mkpath("assets")
-savefig(plt,plot_file)
-
-file     = "data_assets/comparison_table.csv"
-file_tex = "assets/local_smeared_decay_constants.tex"
-table(file)
-tex_table(file, file_tex)
+    file     = "data_assets/comparison_table.csv"
+    file_tex = "assets/local_smeared_decay_constants.tex"
+    table(file)
+    tex_table(file, file_tex)
+end
+main()

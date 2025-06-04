@@ -85,17 +85,21 @@ function write_tau_csv(h5file,flowdata,out_tex)
     write(io,footer)
     close(io)
 end
+function main()
+    file    = "data_assets/topology.hdf5"
+    fileCB  = "data_assets/wall_correlators.hdf5" 
+    outfile = "data_assets/autocor.hdf5"
+    pltdir  = "data_assets/autocorrelation_plots"
+    out_tex = "assets/ensembles.tex"
 
-file    = "data_assets/topology.hdf5"
-fileCB  = "data_assets/wall_correlators.hdf5" 
-outfile = "data_assets/autocor.hdf5"
-pltdir  = "data_assets/autocorrelation_plots"
-out_tex = "assets/ensembles.tex"
+    isfile(outfile) && rm(outfile)
+    ispath(dirname(out_tex)) || mkpath(dirname(out_tex))
 
-isfile(outfile) && rm(outfile)
-full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, group=""    ,name="Q",                       plot_label="Q",                 therm = 1)
-full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, group=""    ,name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
-full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, group=""    ,name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
-full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, group="AS"  ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
+    full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, group=""    ,name="Q",                       plot_label="Q",                 therm = 1)
+    full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, group=""    ,name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
+    full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, group=""    ,name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
+    full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, group="AS"  ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
 
-write_tau_csv(outfile,file,out_tex)
+    write_tau_csv(outfile,file,out_tex)
+end
+main()
