@@ -1,3 +1,12 @@
 [submodule "libs/flow_analysis"]
 	path = libs/flow_analysis
 	url = https://github.com/edbennett/flow_analysis
+[submodule "libs/MadrasSokal"]
+	path = libs/MadrasSokal
+	url = https://github.com/fzierler/MadrasSokal
+[submodule "libs/HiRepParsing"]
+	path = libs/HiRepParsing
+	url = https://github.com/fzierler/HiRepParsing
+[submodule "libs/LatticeUtils"]
+	path = libs/LatticeUtils
+	url = https://github.com/fzierler/LatticeUtils
