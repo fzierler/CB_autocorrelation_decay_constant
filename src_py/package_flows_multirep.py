@@ -111,6 +111,8 @@ def process_file(flow_filename, h5file, W0, group_name):
     energy_density_w0_plaq = flows.Eps[:,flow_time_index_plaq]
     group.create_dataset("trajectories", data=trajectories)
     group.create_dataset("Q", data=Qs)
+    group.create_dataset("w0_val", data=w0_sym.nominal_value)
+    group.create_dataset("w0_std", data=w0_sym.std_dev)
     group.create_dataset("energy_density_w0_sym",  data=energy_density_w0_sym)
     group.create_dataset("energy_density_w0_plaq", data=energy_density_w0_plaq)
 
