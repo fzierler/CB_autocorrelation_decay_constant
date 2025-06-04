@@ -64,10 +64,10 @@ function main()
     plot!(plt, xlims=xl,ylims=yl,legend=:outerright)
 
     for i in 1:5
-        fPS, ΔfPS = readdlm("data_assets/M$(i)FUN_ps.csv",',',skipstart=1)[4:5]
-        fps, Δfps = readdlm("data_assets/M$(i)AS_ps.csv",',',skipstart=1)[4:5]
-        fV,  ΔfV  = readdlm("data_assets/M$(i)FUN_v.csv",',',skipstart=1)[4:5]
-        fv,  Δfv  = readdlm("data_assets/M$(i)AS_v.csv",',',skipstart=1)[4:5]
+        fPS, ΔfPS = readdlm("data_assets/wall_fits/M$(i)FUN_ps.csv",',',skipstart=1)[4:5]
+        fps, Δfps = readdlm("data_assets/wall_fits/M$(i)AS_ps.csv",',',skipstart=1)[4:5]
+        fV,  ΔfV  = readdlm("data_assets/wall_fits/M$(i)FUN_v.csv",',',skipstart=1)[4:5]
+        fv,  Δfv  = readdlm("data_assets/wall_fits/M$(i)AS_v.csv",',',skipstart=1)[4:5]
         scatter!(plt,[i],[ZA_FUN[i]*fPS],yerr=[ZA_FUN[i]*ΔfPS],label="", alpha=0.4, shape=:rect,      color=:green)
         scatter!(plt,[i],[ZA_AS[i]*fps], yerr=[ZA_AS[i]*Δfps], label="", alpha=0.4, shape=:circ,      color=:blue)
         scatter!(plt,[i],[ZV_FUN[i]*fV], yerr=[ZV_FUN[i]*ΔfV], label="", alpha=0.4, shape=:pentagon,  color=:pink)
@@ -103,10 +103,10 @@ function table(file)
         fps_s, Δfps_s = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"as","ps")[1:2]
         fV_s,  ΔfV_s  = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"f" ,"v" )[1:2]
         fv_s,  Δfv_s  = mass_and_decay_constant_unrenormalized(path,ensembles[ens],"as","v" )[1:2]
-        fPS_l, ΔfPS_l = readdlm("data_assets/M$(i)FUN_ps.csv",',',skipstart=1)[4:5]
-        fps_l, Δfps_l = readdlm("data_assets/M$(i)AS_ps.csv",',',skipstart=1)[4:5]
-        fV_l,  ΔfV_l  = readdlm("data_assets/M$(i)FUN_v.csv",',',skipstart=1)[4:5]
-        fv_l,  Δfv_l  = readdlm("data_assets/M$(i)AS_v.csv",',',skipstart=1)[4:5]
+        fPS_l, ΔfPS_l = readdlm("data_assets/wall_fits/M$(i)FUN_ps.csv",',',skipstart=1)[4:5]
+        fps_l, Δfps_l = readdlm("data_assets/wall_fits/M$(i)AS_ps.csv",',',skipstart=1)[4:5]
+        fV_l,  ΔfV_l  = readdlm("data_assets/wall_fits/M$(i)FUN_v.csv",',',skipstart=1)[4:5]
+        fv_l,  Δfv_l  = readdlm("data_assets/wall_fits/M$(i)AS_v.csv",',',skipstart=1)[4:5]
         writedlm(io,[ens ZA_FUN ZA_AS ZV_FUN ZV_AS fPS_s ΔfPS_s fps_s Δfps_s fV_s ΔfV_s fv_s Δfv_s fPS_l ΔfPS_l fps_l Δfps_l fV_l  ΔfV_l fv_l  Δfv_l],',')
     end
     close(io)
