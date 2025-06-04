@@ -31,5 +31,5 @@ python3 src_py/mass_wall.py --ensemble_name M5/FUN --plateau_start 22 --plateau_
 python3 src_py/mass_wall.py --ensemble_name M5/FUN --plateau_start 22 --plateau_end 30  --output_file_mean data_assets/M5FUN_v.csv  --channel v data_assets/wall_correlators.hdf5
 python3 src_py/mass_wall.py --ensemble_name M5/AS  --plateau_start 22 --plateau_end 30  --output_file_mean data_assets/M5AS_ps.csv  --channel ps data_assets/wall_correlators.hdf5
 python3 src_py/mass_wall.py --ensemble_name M5/AS  --plateau_start 22 --plateau_end 30  --output_file_mean data_assets/M5AS_v.csv   --channel v data_assets/wall_correlators.hdf5
-## create plot and table
+# create plots and table
 julia src_jl/compare.jl

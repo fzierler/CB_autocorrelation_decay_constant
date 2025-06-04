@@ -29,17 +29,16 @@ function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdi
         T, L = read(f[ens],"lattice")[1:2]
         mas  = read(f[ens],"quarkmassesmas")[1]
         mf   = read(f[ens],"quarkmassesmf")[1]
-        title = latexstring(L"\beta\!=\!%$(β),~ T\!\times\!L^3\!=\!\!%$(T)\!\times\!%$(L)^3,-\!(am_0^{\rm f},am_0^{\rm as})\!=\!(%$(abs(mf)),%$(abs(mas)))")
+        title = latexstring(L"\beta\!=\!%$(β),~ T\!\times\!L^3\!=\!\!%$(T)\!\times\!%$(L)^3,-\!(am_0^{\rm f},am_0^{\rm as})\!=\!(%$(mf),%$(mas))")
         
-        ens_std = "Lt$(T)Ls$(L)beta$(round(β,sigdigits=3))mf$(mf)mas$(mas)"
-        h5write(outfile,joinpath(ens_std,label,"tau_exp"),τexp)
-        h5write(outfile,joinpath(ens_std,label,"tau_int"),τ)
-        h5write(outfile,joinpath(ens_std,label,"Delta_tau_int"),Δτ)
+        h5write(outfile,joinpath(ensemble,label,"tau_exp"),τexp)
+        h5write(outfile,joinpath(ensemble,label,"tau_int"),τ)
+        h5write(outfile,joinpath(ensemble,label,"Delta_tau_int"),Δτ)
 
         plot!(plt1,plot_title=title,size=(800,300))  
         plot!(plt2,plot_title=title)  
-        savefig(plt1,joinpath(dir1,ens_std*".pdf"))
-        savefig(plt2,joinpath(dir2,ens_std*".pdf"))
+        savefig(plt1,joinpath(dir1,ensemble*".pdf"))
+        savefig(plt2,joinpath(dir2,ensemble*".pdf"))
     end
 end
 # Write results into csv file
@@ -50,7 +49,7 @@ function write_tau_csv(h5file,csv_io)
     f    = h5open(h5file)
     ens  = keys(f)
     pad0 = maximum(length.(ens))+2
-    println(csv_io,"$(rpad("name",pad0)) $(rpad("τ_P,",pad1)) $(rpad("τ_exp_P,",pad2)) $(rpad("τ_Q,",pad1)) $(rpad("τ_exp_Q,",pad2)) $(rpad("τ_E,",pad1)) $(rpad("τ_exp_E,",pad2)) $(rpad("τ_Cπ,",pad1)) $(rpad("τ_exp_Cπ,",pad2))")
+    println(csv_io,"$(rpad("name,",pad0)) $(rpad("τ_P,",pad1)) $(rpad("τ_exp_P,",pad2)) $(rpad("τ_Q,",pad1)) $(rpad("τ_exp_Q,",pad2)) $(rpad("τ_E,",pad1)) $(rpad("τ_exp_E,",pad2)) $(rpad("τ_Cπ,",pad1)) $(rpad("τ_exp_Cπ,",pad2))")
     for e in ens    
         τQ, ΔτQ, τexpQ = read(f[e]["topology"],"tau_int"),       read(f[e]["topology"],"Delta_tau_int"),      read(f[e]["topology"],"tau_exp")
         τE, ΔτE, τexpE = read(f[e]["energy_density"],"tau_int"), read(f[e]["energy_density"],"Delta_tau_int"),read(f[e]["energy_density"],"tau_exp")
@@ -86,6 +85,5 @@ full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir
 full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, group="FUN" ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
 
 io = open(out_csv,"w")
-#write_tau_csv(outfile,io)
-write_tau_csv_no_correlators(outfile,io)
+write_tau_csv(outfile,io)
 close(io)
