@@ -82,7 +82,7 @@ isfile(outfile) && rm(outfile)
 full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, group=""    ,name="Q",                       plot_label="Q",                 therm = 1)
 full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, group=""    ,name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
 full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, group=""    ,name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
-full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, group="FUN" ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
+full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, group="AS"  ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
 
 io = open(out_csv,"w")
 write_tau_csv(outfile,io)
