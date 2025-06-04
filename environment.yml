@@ -12,6 +12,7 @@ dependencies:
   - openssl=3.3.2
   - pip=24.2
   - python=3.12.6
+  - juliaup=1.17.21
   - readline=8.2
   - setuptools=74.1.2
   - tk=8.6.13
