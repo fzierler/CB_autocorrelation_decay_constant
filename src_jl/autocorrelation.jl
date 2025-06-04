@@ -1,4 +1,3 @@
-using Pkg;Pkg.activate("./src_jl")
 using MadrasSokal
 using Plots
 using LaTeXStrings

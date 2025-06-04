@@ -1,4 +1,3 @@
-using Pkg;Pkg.activate("./src_jl")
 using HiRepParsing
 using DelimitedFiles
 using HDF5
