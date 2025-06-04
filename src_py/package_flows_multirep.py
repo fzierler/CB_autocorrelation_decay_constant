@@ -113,7 +113,7 @@ def process_file(flow_filename, h5file,W0):
 
 def main():
     args = get_args()
-    with h5py.File(args.h5_filename, "w-") as h5file:
+    with h5py.File(args.h5_filename, "a") as h5file:
         for flow_filename in args.flow_filenames:
             process_file(flow_filename, h5file, args.W0)
 

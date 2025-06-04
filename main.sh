@@ -3,7 +3,11 @@ julia src_jl/instantiate.jl
 # parse wall source logfiles and save to hdf5
 julia src_jl/parse.jl
 # parse and analyse wilson flow/topology measurements 
-python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5  $(find ./raw_data/ -name out_flow | xargs)
+python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5  ./raw_data/topology/Lt96Ls20beta6.5mf0.71mas1.01FUN/out/out_flow
+python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5  ./raw_data/topology/Lt48Ls20beta6.5mf0.71mas1.01FUN/out/out_flow
+python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5  ./raw_data/topology/Lt64Ls32beta6.5mf0.72mas1.01FUN/out/out_flow
+python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5  ./raw_data/topology/Lt64Ls20beta6.5mf0.71mas1.01FUN/out/out_flow
+python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5  ./raw_data/topology/Lt64Ls20beta6.5mf0.70mas1.01FUN/out/out_flow
 # determine autocorrelation times
 julia src_jl/autocorrelation.jl    
 # perform individual fits for every ensemble and channel
