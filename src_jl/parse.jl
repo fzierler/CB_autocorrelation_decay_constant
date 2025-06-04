@@ -2,10 +2,28 @@ using Pkg;Pkg.activate("./src_jl")
 using HiRepParsing
 using DelimitedFiles
 using HDF5
+using ArgParse
+using ProgressMeter
 
 # It creates a single hdf5 file for all log files. Measurements performed on the same ensemble
 # are written in distinct hdf5 groups labelled  by the variable `ensemble`
-function main(listfile,h5file)
+function parse_commandline()
+    s = ArgParseSettings()
+    @add_arg_table s begin
+        "--ensemble_metadata"
+            help = "Directory containing log files"
+            required = true
+        "--output_hdf5"
+            help = "Where to write the resulting HDF5 file"
+            required = true
+    end
+    return parse_args(s)
+end
+function main()
+    parsed_args = parse_commandline()
+    listfile = expanduser(parsed_args["ensemble_metadata"])
+    h5file   = expanduser(parsed_args["output_hdf5"])
+
     setup=true
     filter_channels = true
     channels = ["g5", "g1", "g2", "g3", "g5_g0g5_re"]
@@ -13,9 +31,7 @@ function main(listfile,h5file)
     ispath(dirname(h5file)) || mkpath(dirname(h5file))
     isfile(h5file) && rm(h5file)
     
-    println("Parsing wall source correlator data")
-    for (file,ensemble) in eachrow(readdlm(listfile,','))
-        @show (file,ensemble)
+    @showprogress "Parsing wall source correlator data" for (file,ensemble) in eachrow(readdlm(listfile,','))
         # parse ensmble name an representation and create substructure for hdf5 file 
         m     = match(r"(M[1-5])(FUN|AS)",ensemble)
         group = joinpath(m.captures...)
@@ -28,7 +44,4 @@ function main(listfile,h5file)
         h5write(h5file,joinpath(group,"quarkmassesmas"),[mas])
     end
 end
-
-listfile = "./metadata/ensembles.csv" 
-h5file   = "data_assets/wall_correlators.hdf5" 
-main(listfile, h5file)
+main()

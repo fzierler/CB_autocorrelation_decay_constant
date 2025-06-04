@@ -1,7 +1,7 @@
 # download and install all julia dependencies required for the analysis 
 julia src_jl/instantiate.jl
 # parse wall source logfiles and save to hdf5
-julia src_jl/parse.jl
+julia src_jl/parse.jl --ensemble_metadata ./metadata/ensembles.csv --output_hdf5 ./data_assets/wall_correlators.hdf5
 # parse and analyse wilson flow/topology measurements 
 python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5 --ensemble M1 ./raw_data/topology/Lt48Ls20beta6.5mf0.71mas1.01FUN/out/out_flow
 python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5 --ensemble M2 ./raw_data/topology/Lt64Ls20beta6.5mf0.71mas1.01FUN/out/out_flow
