@@ -112,7 +112,18 @@ function table(file)
     close(io)
 end
 function tex_table(file,outfile)
+    header = L"""
+    \begin{tabular}{ |c|c|c||c|c||c|c||c|c||c|c| }
+    \hline
+    Ensemble &  $af_{\rm PS}^{loc}$ &  $af_{\rm PS}^{smear}$ &  $af_{\rm ps}^{loc}$ &  $af_{\rm ps}^{smear}$ &  $af_{\rm V}^{loc}$ &  $af_{\rm V}^{smear}$ &  $af_{\rm v}^{loc}$ &  $af_{\rm v}^{smear}$ \\
+    \hline \hline
+    """
+    footer = """
+    \\hline \\hline
+    \\end{tabular}
+    """
     io = open(outfile,"w+")
+    write(io,header)
     for row in eachrow(readdlm(file,',',skipstart=1))
         ZA_FUN, ZA_AS, ZV_FUN, ZV_AS = row[2:5] 
         ens  = row[1]
@@ -126,6 +137,7 @@ function tex_table(file,outfile)
         v_l  = errorstring(ZV_AS *row[20],ZV_AS *row[21]; nsig=1)
         println(io,"$ens & $PS_l & $PS_s & $ps_l & $ps_s & $V_l & $V_s & $v_l & $v_s \\\\") 
     end
+    write(io,footer)
     close(io)
 end
 
@@ -135,6 +147,6 @@ ispath("assets") || mkpath("assets")
 savefig(plt,plot_file)
 
 file     = "data_assets/comparison_table.csv"
-file_tex = "assets/comparison_table.tex"
+file_tex = "assets/local_smeared_decay_constants.tex"
 table(file)
 tex_table(file, file_tex)
