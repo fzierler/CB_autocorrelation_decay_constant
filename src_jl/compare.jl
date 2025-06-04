@@ -29,7 +29,7 @@ end
 function main()
     h5file = "data_assets/wall_correlators.hdf5" 
     fid    = h5open(h5file)
-    P      = [ mean(fid["M$(i)FUN"]["plaquette"][]) for i in 1:5 ]
+    P      = [ mean(fid["M$(i)/FUN"]["plaquette"][]) for i in 1:5 ]
     beta   = 6.5
     Z(C, β, ΔΣ, Δ, P) = 1 + C * (ΔΣ + Δ) * (8/β) /(16π^2*P)
     ZA(C,β,P) = Z(C, β, -12.82, -3, P)
@@ -88,7 +88,7 @@ function table(file)
     write(io,header*"\n")
     h5file = "data_assets/wall_correlators.hdf5" 
     fid    = h5open(h5file)
-    P      = [ mean(fid["M$(i)FUN"]["plaquette"][]) for i in 1:5 ]
+    P      = [ mean(fid["M$(i)/FUN"]["plaquette"][]) for i in 1:5 ]
     beta   = 6.5
     Z(C, β, ΔΣ, Δ, P) = 1 + C * (ΔΣ + Δ) * (8/β) /(16π^2*P)
     ZA(C,β,P) = Z(C, β, -12.82, -3, P)

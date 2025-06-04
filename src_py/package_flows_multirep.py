@@ -29,6 +29,11 @@ def get_args():
         help="Where to place the combined HDF5 file.",
     )
     parser.add_argument(
+        "--ensemble",
+        required=True,
+        help="Label of the ensmble to be used as the HDF5 groupname.",
+    )
+    parser.add_argument(
         "--W0",
         required=False,
         type=float,
@@ -71,9 +76,8 @@ def get_filename_metadata(metadata, content):
             metadata[key] = value
 
 
-def process_file(flow_filename, h5file,W0):
+def process_file(flow_filename, h5file, W0, group_name):
     flows = read_flows_hirep(flow_filename, metadata_callback=get_filename_metadata)
-    group_name = "gflow_{NT}x{NX}x{NY}x{NZ}b{beta}mf{mf}mas{mas}".format(**flows.metadata)
     group = h5file.create_group(group_name)
     group.create_dataset("beta", data=flows.metadata["beta"])
     group.create_dataset("configurations", data=flows.cfg_filenames.astype("S"))
@@ -115,7 +119,7 @@ def main():
     args = get_args()
     with h5py.File(args.h5_filename, "a") as h5file:
         for flow_filename in args.flow_filenames:
-            process_file(flow_filename, h5file, args.W0)
+            process_file(flow_filename, h5file, args.W0, args.ensemble)
 
 if __name__ == "__main__":
     main()

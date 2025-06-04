@@ -6,7 +6,7 @@ using DelimitedFiles
 using HDF5
 default(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=6Plots.mm, plot_titlefontsize=12)
 
-function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdir, index=nothing, ind_suffix="", therm = 1)
+function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdir, index=nothing, group="", therm = 1)
     dir1 = joinpath(outdir,"$(label)_history")
     dir2 = joinpath(outdir,"$(label)_full")
     for dir in [dir1,dir2]
@@ -14,8 +14,9 @@ function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdi
     end
 
     f = h5open(file)
-    for ens in keys(f)
-        obs  = read(f[ens],name)
+    for ensemble in keys(f)
+        ens = joinpath(ensemble,group)
+        obs = read(f[ens],name)
         if !isnothing(index)
             obs = obs[index...]
         end
@@ -31,9 +32,9 @@ function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdi
         title = latexstring(L"\beta\!=\!%$(β),~ T\!\times\!L^3\!=\!\!%$(T)\!\times\!%$(L)^3,-\!(am_0^{\rm f},am_0^{\rm as})\!=\!(%$(abs(mf)),%$(abs(mas)))")
         
         ens_std = "Lt$(T)Ls$(L)beta$(round(β,sigdigits=3))mf$(mf)mas$(mas)"
-        h5write(outfile,joinpath(ens_std,label*ind_suffix,"tau_exp"),τexp)
-        h5write(outfile,joinpath(ens_std,label*ind_suffix,"tau_int"),τ)
-        h5write(outfile,joinpath(ens_std,label*ind_suffix,"Delta_tau_int"),Δτ)
+        h5write(outfile,joinpath(ens_std,label,"tau_exp"),τexp)
+        h5write(outfile,joinpath(ens_std,label,"tau_int"),τ)
+        h5write(outfile,joinpath(ens_std,label,"Delta_tau_int"),Δτ)
 
         plot!(plt1,plot_title=title,size=(800,300))  
         plot!(plt2,plot_title=title)  
@@ -79,10 +80,10 @@ out_csv = "data_assets/autocor.csv"
 pltdir  = "data_assets/autocorrelation_plots"
 
 isfile(outfile) && rm(outfile)
-full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, name="Q",                       plot_label="Q",                 therm = 1)
-full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
-full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
-#full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)", therm = 1)
+full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, group=""    ,name="Q",                       plot_label="Q",                 therm = 1)
+full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, group=""    ,name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
+full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, group=""    ,name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
+full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, group="FUN" ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
 
 io = open(out_csv,"w")
 #write_tau_csv(outfile,io)
