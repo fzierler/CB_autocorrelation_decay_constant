@@ -40,6 +40,6 @@ python3 src_py/mass_wall.py --ensemble_name M5/AS  --plateau_start 22 --plateau_
 echo " ...done!"
 # create plots and table
 echo -n "Create comparison plot and tables for decay constants..."
-julia --project=./src_jl src_jl/compare.jl 
+julia --project=./src_jl src_jl/compare.jl --wall_correlators_h5 data_assets/wall_correlators.hdf5 --wall_fits data_assets/wall_fits --smeared_results external_data/smeared --decay_output_csv data_assets/comparison_table.csv --decay_output_tex assets/local_smeared_decay_constants.tex --decay_output_pdf assets/wall_comparison.pdf
 echo " ...done!"
 echo "All done."
