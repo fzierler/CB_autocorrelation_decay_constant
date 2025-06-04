@@ -9,7 +9,7 @@ python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5
 python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5 --ensemble M4 ./raw_data/topology/Lt64Ls20beta6.5mf0.70mas1.01FUN/out/out_flow
 python3 src_py/package_flows_multirep.py --h5_filename data_assets/topology.hdf5 --ensemble M5 ./raw_data/topology/Lt64Ls32beta6.5mf0.72mas1.01FUN/out/out_flow
 # determine autocorrelation times
-julia src_jl/autocorrelation.jl    
+julia src_jl/autocorrelation.jl --wilson_flow_hdf5 data_assets/topology.hdf5 --wall_correlators_hdf5 data_assets/wall_correlators.hdf5 --output_hdf5 data_assets/autocor.hdf5 --output_tex assets/ensembles.tex --plot_dir data_assets/autocorrelation_plots 
 # perform individual fits for every ensemble and channel
 mkdir -p data_assets/wall_fits
 python3 src_py/mass_wall.py --ensemble_name M1/FUN --plateau_start 16 --plateau_end 24  --output_file_mean data_assets/wall_fits/M1FUN_ps.csv --channel ps data_assets/wall_correlators.hdf5
@@ -33,4 +33,4 @@ python3 src_py/mass_wall.py --ensemble_name M5/FUN --plateau_start 22 --plateau_
 python3 src_py/mass_wall.py --ensemble_name M5/AS  --plateau_start 22 --plateau_end 30  --output_file_mean data_assets/wall_fits/M5AS_ps.csv  --channel ps data_assets/wall_correlators.hdf5
 python3 src_py/mass_wall.py --ensemble_name M5/AS  --plateau_start 22 --plateau_end 30  --output_file_mean data_assets/wall_fits/M5AS_v.csv   --channel v data_assets/wall_correlators.hdf5
 # create plots and table
-julia src_jl/compare.jl
+julia src_jl/compare.jl 

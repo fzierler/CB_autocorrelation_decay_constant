@@ -5,6 +5,7 @@ using LaTeXStrings
 using DelimitedFiles
 using HDF5
 using Statistics
+using ArgParse
 default(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=6Plots.mm, plot_titlefontsize=12)
 
 function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdir, index=nothing, group="", therm = 1)
@@ -85,21 +86,44 @@ function write_tau_csv(h5file,flowdata,out_tex)
     write(io,footer)
     close(io)
 end
+function parse_commandline()
+    s = ArgParseSettings()
+    @add_arg_table s begin
+        "--wilson_flow_hdf5"
+            help = "HDF5 file containing the gradient flow data"
+            required = true
+        "--wall_correlators_hdf5"
+            help = "HDF5 file containing the correlators from local wall sources"
+            required = true
+        "--output_hdf5"
+            help = "Where to write the resulting HDF5 file"
+            required = true
+        "--output_tex"
+            help = "Where to write the publication ready LaTeX table"
+            required = true
+        "--plot_dir"
+            help = "Where to save additional figures visualising the autocorrelation of all quantities"
+            required = true
+    end
+    return parse_args(s)
+end
 function main()
-    file    = "data_assets/topology.hdf5"
-    fileCB  = "data_assets/wall_correlators.hdf5" 
-    outfile = "data_assets/autocor.hdf5"
-    pltdir  = "data_assets/autocorrelation_plots"
-    out_tex = "assets/ensembles.tex"
+    parsed_args = parse_commandline()
+
+    file_flow = parsed_args["wilson_flow_hdf5"]
+    file_wall = parsed_args["wall_correlators_hdf5"] 
+    outfile = parsed_args["output_hdf5"]
+    out_tex = parsed_args["output_tex"]
+    pltdir  = parsed_args["plot_dir"]    
 
     isfile(outfile) && rm(outfile)
     ispath(dirname(out_tex)) || mkpath(dirname(out_tex))
 
-    full_observable_from_hdf5(file,  outfile; label="topology",      outdir = pltdir, group=""    ,name="Q",                       plot_label="Q",                 therm = 1)
-    full_observable_from_hdf5(file,  outfile; label="energy_density",outdir = pltdir, group=""    ,name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
-    full_observable_from_hdf5(file,  outfile; label="plaquette",     outdir = pltdir, group=""    ,name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
-    full_observable_from_hdf5(fileCB,outfile; label="PS_correlator", outdir = pltdir, group="AS"  ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
+    full_observable_from_hdf5(file_flow, outfile; label="topology",      outdir = pltdir, group=""    ,name="Q",                       plot_label="Q",                 therm = 1)
+    full_observable_from_hdf5(file_flow, outfile; label="energy_density",outdir = pltdir, group=""    ,name="energy_density_w0_sym",   plot_label=L"\mathcal{E}(w_0)", therm = 1)
+    full_observable_from_hdf5(file_flow, outfile; label="plaquette",     outdir = pltdir, group=""    ,name="plaquette",               plot_label=L"<\!p\!>",          therm = 1)
+    full_observable_from_hdf5(file_wall, outfile; label="PS_correlator", outdir = pltdir, group="AS"  ,name="TRIPLET/g5",index=(:,10), plot_label=L"C_\pi(t=10)",      therm = 1)
 
-    write_tau_csv(outfile,file,out_tex)
+    write_tau_csv(outfile,file_flow,out_tex)
 end
 main()
