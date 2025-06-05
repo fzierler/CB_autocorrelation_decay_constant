@@ -11,11 +11,9 @@ pgfplotsx(size=(500, 300), legend=:topright,frame=:box,titlefontsize=12,legendfo
 function mass_and_decay_constant_unrenormalized(path,ens,rep,channel)
     json_file = joinpath(path,ens,"meson_extraction_$(rep)_$(channel)_samples.json")
     data = JSON.parsefile(json_file)
-    f    = mean(data["$(rep)_$(channel)_matrix_element_samples"]./sqrt.(data["$(rep)_$(channel)_mass_samples"]))
-    Δf   = std( data["$(rep)_$(channel)_matrix_element_samples"]./sqrt.(data["$(rep)_$(channel)_mass_samples"]))
-    m    = data["$(rep)_$(channel)_mass_value"]
-    Δm   = std(data["$(rep)_$(channel)_mass_samples"])
-    return f, Δf, m, Δm
+    f    = mean(data["$(rep)_$(channel)_matrix_element"]./sqrt.(data["$(rep)_$(channel)_mass_samples"]))
+    Δf   = std( data["$(rep)_$(channel)_matrix_element"]./sqrt.(data["$(rep)_$(channel)_mass_samples"]))
+    return f, Δf
 end
 function plot_decay(h5file,wall_fit_path,smeared_path)
     fid    = h5open(h5file)
@@ -36,10 +34,10 @@ function plot_decay(h5file,wall_fit_path,smeared_path)
     plt  = plot(;xticks, title, xlabel, ylabel)
     for i in 1:5
         ens = "M$i"
-        fPS, ΔfPS = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"f" ,"ps")[1:2]
-        fps, Δfps = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"as","ps")[1:2]
-        fV,  ΔfV  = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"f" ,"v" )[1:2]
-        fv,  Δfv  = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"as","v" )[1:2]
+        fPS, ΔfPS = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"f" ,"ps")
+        fps, Δfps = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"as","ps")
+        fV,  ΔfV  = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"f" ,"v" )
+        fv,  Δfv  = mass_and_decay_constant_unrenormalized(smeared_path,ENSEMBLES[ens],"as","v" )
         scatter!(plt,[i],[ZA_FUN[i]*fPS],yerr=[ZA_FUN[i]*ΔfPS],label="", alpha=0.8, shape=:rect,      color=:green)
         scatter!(plt,[i],[ZA_AS[i]*fps], yerr=[ZA_AS[i]*Δfps], label="", alpha=0.8, shape=:circ,      color=:blue)
         scatter!(plt,[i],[ZV_FUN[i]*fV], yerr=[ZV_FUN[i]*ΔfV], label="", alpha=0.8, shape=:pentagon,  color=:pink)
