@@ -11,8 +11,8 @@ pgfplotsx(size=(500, 300), legend=:topright,frame=:box,titlefontsize=12,legendfo
 function mass_and_decay_constant_unrenormalized(path,ens,rep,channel)
     json_file = joinpath(path,ens,"meson_extraction_$(rep)_$(channel)_samples.json")
     data = JSON.parsefile(json_file)
-    f    = mean(data["$(rep)_$(channel)_matrix_element"]./sqrt.(data["$(rep)_$(channel)_mass_samples"]))
-    Δf   = std( data["$(rep)_$(channel)_matrix_element"]./sqrt.(data["$(rep)_$(channel)_mass_samples"]))
+    f    = mean(data["$(rep)_$(channel)_matrix_element"]./data["$(rep)_$(channel)_mass_samples"]./sqrt.(2))
+    Δf   = std( data["$(rep)_$(channel)_matrix_element"]./data["$(rep)_$(channel)_mass_samples"]./sqrt.(2))
     return f, Δf
 end
 function plot_decay(h5file,wall_fit_path,smeared_path)
