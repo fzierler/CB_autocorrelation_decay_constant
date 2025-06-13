@@ -1,18 +1,14 @@
-using MadrasSokal
 using Plots
 using LaTeXStrings
 using DelimitedFiles
 using HDF5
 using Statistics
 using ArgParse
+using LsqFit
+include("autocorrelation_utils.jl")
 default(fontfamily="Computer Modern", frame=:box, top_margin=4Plots.mm, left_margin=6Plots.mm, plot_titlefontsize=12)
 
 function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdir, index=nothing, group="", therm = 1)
-    dir1 = joinpath(outdir,"$(label)_history")
-    dir2 = joinpath(outdir,"$(label)_full")
-    for dir in [dir1,dir2]
-        ispath(dir) || mkpath(dir)
-    end
 
     f = h5open(file)
     for ensemble in keys(f)
@@ -21,25 +17,15 @@ function full_observable_from_hdf5(file, outfile; label, name, plot_label, outdi
         if !isnothing(index)
             obs = obs[index...]
         end
-        cfgn = 1:length(obs)
         
-        plt1,τ, Δτ,τexp = MadrasSokal.publication_plot(cfgn,obs,plot_label,therm)
-        plt2 = autocorrelation_overview(cfgn,obs,plot_label,therm;with_exponential=true)
- 
-        β    = read(f[ens],"beta")
-        T, L = read(f[ens],"lattice")[1:2]
-        mas  = read(f[ens],"quarkmassesmas")[1]
-        mf   = read(f[ens],"quarkmassesmf")[1]
-        title = latexstring(L"\beta\!=\!%$(β),~ T\!\times\!L^3\!=\!\!%$(T)\!\times\!%$(L)^3,-\!(am_0^{\rm f},am_0^{\rm as})\!=\!(%$(mf),%$(mas))")
-        
+        τexp    = exponential_autocorrelation_time(obs;minlags=100)        
+        τ0, Δτ0 = madras_sokal_windows(obs)
+        τ, W    = findmax(τ0)
+        Δτ      = Δτ0[W] 
+
         h5write(outfile,joinpath(ensemble,label,"tau_exp"),τexp)
         h5write(outfile,joinpath(ensemble,label,"tau_int"),τ)
         h5write(outfile,joinpath(ensemble,label,"Delta_tau_int"),Δτ)
-
-        plot!(plt1,plot_title=title,size=(800,300))  
-        plot!(plt2,plot_title=title)  
-        savefig(plt1,joinpath(dir1,ensemble*".pdf"))
-        savefig(plt2,joinpath(dir2,ensemble*".pdf"))
     end
 end
 # Write results into csv file
