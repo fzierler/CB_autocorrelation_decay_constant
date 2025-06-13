@@ -4,8 +4,8 @@ using HDF5
 using Statistics
 using LaTeXStrings
 using DelimitedFiles
-using LatticeUtils
 using ArgParse
+include("autocorrelation_utils.jl")
 pgfplotsx(size=(500, 300), legend=:topright,frame=:box,titlefontsize=12,legendfontsize=12,labelfontsize=12,left_margin=0Plots.mm)
 
 function mass_and_decay_constant_unrenormalized(path,ens,rep,channel)
