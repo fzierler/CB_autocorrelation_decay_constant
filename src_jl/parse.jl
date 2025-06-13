@@ -1,8 +1,9 @@
-using HiRepParsing
 using DelimitedFiles
 using HDF5
 using ArgParse
 using ProgressMeter
+using Parsers
+include("parse_utils.jl")
 
 # It creates a single hdf5 file for all log files. Measurements performed on the same ensemble
 # are written in distinct hdf5 groups labelled  by the variable `ensemble`
